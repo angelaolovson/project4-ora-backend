@@ -113,7 +113,6 @@ router.get('/:id', async(req, res, next) => {
         const user = await User.findById(userId)
         .populate('listing')
         .populate('bookings')
-        .populate('reviewsGiven')
         .populate('savedListing')
 
         res.json(user)

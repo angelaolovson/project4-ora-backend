@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    firstName: {
         type: String,
         required: true
     },
-    image: {
+    lastName: {
         type: String,
-        default: "",
+        required: true
     },
     email: {
         type: String,
@@ -18,26 +18,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    address: {
         type: String,
         default: ""
     },
-    occupation: {
+    phoneNumber: {
         type: String,
         default: ""
     },
-    listing: [{
+    orders:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Listing',
-    }],
-    bookings:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Booking',
-    }],
-    savedListing:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Listing',
-    }],
+        ref: 'Order',
+    }]
 });
 
 const User = mongoose.model('User', userSchema);

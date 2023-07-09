@@ -20,15 +20,12 @@ const productSchema = new mongoose.Schema({
     },
     ingredients: {
         type: String,
-        required: true,
     },
     color: {
         type: String,
-        required: true,
     },
     scents: {
         type: String,
-        required: true,
     },
     category: {
         type: String,
@@ -47,6 +44,9 @@ const productSchema = new mongoose.Schema({
         ref: 'Order',
     }]
 });
+
+
+
 
 const Product = mongoose.model('Product', productSchema);
 module.exports = Product;

@@ -1,25 +1,12 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    customer: {
+    cart: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Cart',
         index: true,
     },
-    product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        index: true,
-    },
-    qty:{
-        type: String,
-        index: true,
-    },
-    totalPrice: {
-        type: Number,
-        index: true,
-    },
-    placedAt: {
+    createdAt: {
         type: Date,
         default: Date.now,
     }

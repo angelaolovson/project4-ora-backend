@@ -19,12 +19,16 @@ const cartSchema = new mongoose.Schema({
           default: 1,
         },
       },
-    ],
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-  });
+    ]
+});
+
+
+// pre-hooks to populate the product
+cartSchema.pre(["findOne","find"],function(next){
+    this.populate("items");
+    next();
+})
+
 
 const Cart = mongoose.model('Cart', cartSchema);
 module.exports = Cart;

@@ -40,6 +40,23 @@ router.get("/:id", async (req, res) => {
   
 // ORDER CREATE ROUTE
 router.post("/", async (req, res) => {
+  console.log(req.body)
+    try {
+        // const { userId, items } = req.body;
+        const cart = req.body.cart
+        console.log(cart)
+        // Create a new cart with the provided user and items
+        const newOrder = await Order.create({
+            user: user,
+            items: items,
+    });
+
+    // Return the newly created cart in the response
+    res.status(200).json({cart: newOrder});
+  } catch (error) {
+    console.log(error)
+    res.status(400).json(error);
+  }
 });
   
 // ORDER UPDATE ROUTE
@@ -50,7 +67,6 @@ router.put("/:id", async (req, res) => {
 // ORDER DELETE ROUTE
 router.delete("/:id", async (req, res) => {
   try {
-    // send all people
     res.json(await Order.findByIdAndRemove(req.params.id));
   } catch (error) {
     //send error

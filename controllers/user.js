@@ -80,7 +80,8 @@ router.post('/signup', async(req, res, next) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            role: req.body.role
           };
         //create hash on user password depends on SALT number
         const rounds = SALT;

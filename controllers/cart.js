@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
       const cart = await Cart.findById(req.params.id)
-      res.status(200).json({cart});
+      res.status(200).json(cart);
     } catch (error) {
       res.status(400).json(error);
     }
@@ -42,12 +42,15 @@ router.get("/:id", async (req, res) => {
 
 // CART CREATE ROUTE
 router.post("/", async (req, res) => {
+    console.log(req.body)
     try {
-        const { userId, items } = req.body;
-
+        // const { userId, items } = req.body;
+        const user = req.body.user
+        const items = req.body.items
+        console.log(items)
         // Create a new cart with the provided user and items
         const newCart = await Cart.create({
-            user: userId,
+            user: user,
             items: items,
         });
 
@@ -60,16 +63,16 @@ router.post("/", async (req, res) => {
 });
 
   
-// PRODUCT UPDATE ROUTE
+// Cart UPDATE ROUTE
 router.put("/:id", async (req, res) => {
   try {
-    const updateProduct = {
+    const updateCart = {
         ...req.body,
     };
-    console.log(updateProduct)
-    const updatedProduct = await Cart.findByIdAndUpdate(req.params.id, updateProduct, { new: true })
-    res.status(200).json(updatedProduct);
-    console.log(updatedProduct)
+    console.log(updateCart)
+    const updatedCart = await Cart.findByIdAndUpdate(req.params.id, updateCart, { new: true })
+    res.status(200).json(updatedCart);
+    console.log(updatedCart)
   } catch (error) {
     res.status(400).json(error);
     console.log(error)

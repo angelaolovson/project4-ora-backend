@@ -11,6 +11,20 @@ const jwt = require('jsonwebtoken');
 
 
 let failedLogin;
+
+// PRODUCT INDEX ROUTE
+router.get("/", async (req, res) => {
+    // Get all users
+    let users;
+    try {
+      users = await User.find(req.query)
+      res.status(200).json(users)
+    } catch (error) {
+      //send error
+      res.status(400).json(error);
+    }
+  });
+
 //login post route
 router.post('/login', async(req, res, next) => {
     try {
@@ -63,10 +77,10 @@ router.post('/signup', async(req, res, next) => {
     try {
         //creat user and rounds of salt
         const newUser = {
-            email: req.body.email,
-            password: req.body.password,
             firstName: req.body.firstName,
-            lastName: req.body.lastName
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password
           };
         //create hash on user password depends on SALT number
         const rounds = SALT;

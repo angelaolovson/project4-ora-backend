@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
     },
     inventoryCount:{
         type: Number,
-        required: true,
+        default: 0,
     },
     orders: [{
         type: mongoose.Schema.Types.ObjectId,

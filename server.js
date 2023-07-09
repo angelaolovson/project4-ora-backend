@@ -35,6 +35,7 @@ app.use(cors());
 const userRouter = require("./controllers/user");
 const orderRouter = require("./controllers/order");
 const productRouter = require("./controllers/product");
+const cartRouter = require("./controllers/cart");
 
 //route
 app.get("/", async(req,res)=> {
@@ -50,6 +51,7 @@ app.get("/", async(req,res)=> {
 app.use("/user", userRouter);
 app.use("/order", orderRouter);
 app.use("/product", productRouter);
+app.use("/cart", cartRouter);
 
 //Listener
 app.listen(PORT, () => console.log(`listening to PORT ${PORT}`));

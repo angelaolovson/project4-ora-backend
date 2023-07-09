@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
       const product = await Product.findById(req.params.id)
-      res.status(200).json({product});
+      res.status(200).json({product}); // need to be in {}?
     } catch (error) {
       res.status(400).json(error);
     }

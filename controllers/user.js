@@ -132,19 +132,29 @@ router.get('/:id', async(req, res, next) => {
 })
 
 //update user
-  router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
+try {
+    const profileContent = {
+        ...req.body
+    }
+    res.json(
+        await User.findByIdAndUpdate(req.params.id,profileContent, { new: true })
+    );
+    } catch (error) {
+    //send error
+    console.log(error)
+    res.status(400).json(error);
+    }
+});
+
+// USER DELETE ROUTE
+router.delete("/:id", async (req, res) => {
     try {
-        const profileContent = {
-            ...req.body
-        }
-        res.json(
-          await User.findByIdAndUpdate(req.params.id,profileContent, { new: true })
-        );
-      } catch (error) {
-        //send error
-        console.log(error)
-        res.status(400).json(error);
-      }
-  });
+      res.json(await User.findByIdAndRemove(req.params.id));
+    } catch (error) {
+      //send error
+      res.status(400).json(error);
+    }
+});
 
 module.exports = router;

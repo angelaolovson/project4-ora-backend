@@ -11,13 +11,13 @@ const orderSchema = new mongoose.Schema({
         ref: 'Product',
         index: true,
     },
-    city:{
+    qty:{
         type: String,
-        default: "",
+        index: true,
     },
     totalPrice: {
         type: Number,
-        default: 0,
+        index: true,
     },
     placedAt: {
         type: Date,

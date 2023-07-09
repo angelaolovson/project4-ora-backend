@@ -22,18 +22,26 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    categories: {
+    color: {
         type: String,
         required: true,
     },
-    subCategories: {
+    scents: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+    subCategory: {
         type: String,
         required: true,
     },
     inventoryCount:{
-            type: Number,
-            required: true,
-        },
+        type: Number,
+        required: true,
+    },
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order',

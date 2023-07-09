@@ -3,7 +3,6 @@
 ////////////////////////////////////////
 const express = require("express");
 const Product = require("../models/product");
-const axios = require("axios");
 const User = require("../models/user");
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
@@ -46,6 +45,15 @@ router.post("/", async (req, res) => {
   try {
     const newProduct = await Product.create({
         title: req.body.title,
+        price: req.body.price,
+        images: req.body.images,
+        description: req.body.description,
+        ingredients: req.body.ingredients,
+        color: req.body.color,
+        scents: req.body.scents,
+        category: req.body.category,
+        subCategory: req.body.subCategory,
+        inventoryCount: req.body.inventoryCount
     });
 
     // Return the newly created product in the response
@@ -63,12 +71,13 @@ router.put("/:id", async (req, res) => {
     const updateProduct = {
         ...req.body,
     };
-
+    console.log(updateProduct)
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updateProduct, { new: true })
     res.status(200).json(updatedProduct);
+    console.log(updatedProduct)
   } catch (error) {
-    console.log(error)
     res.status(400).json(error);
+    console.log(error)
   }
 });
 

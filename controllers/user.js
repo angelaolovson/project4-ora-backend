@@ -4,15 +4,13 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 require("dotenv").config();
-const {SALT,SECRET,IMGBB_API_KEY} = process.env;
+const {SALT,SECRET} = process.env;
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const jwt = require('jsonwebtoken');
-const imgbbUploader = require("imgbb-uploader");
+
+
 let failedLogin;
-
-
-
 //login post route
 router.post('/login', async(req, res, next) => {
     try {
@@ -30,24 +28,23 @@ router.post('/login', async(req, res, next) => {
         }
         //if user match, compare password
         const match = await bcrypt.compare(req.body.password, user.password);
-        console.log("😇",user.id, "🥹",user.username)
         //if password match, then create session
         if(match) {
             const token = jwt.sign(
                 {
                     id: user._id,
-                    username: user.username,
+                    username: user.email,
                 },
                 SECRET
             );
             req.session.currentUser = {
                 id: user._id,
-                username: user.username
+                username: user.email
             };
             
            res.json({token, currentUser: req.session.currentUser})
         } else {
-            failedLogin = "Your username or password didn't match"
+            failedLogin = "Your email or password didn't match"
             res.status(401).json({ error: failedLogin });
         }
     } catch(err) {
@@ -66,9 +63,10 @@ router.post('/signup', async(req, res, next) => {
     try {
         //creat user and rounds of salt
         const newUser = {
-            username: req.body.username,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName
           };
         //create hash on user password depends on SALT number
         const rounds = SALT;
@@ -111,9 +109,7 @@ router.get('/:id', async(req, res, next) => {
         let userId = req.params.id;
 
         const user = await User.findById(userId)
-        .populate('listing')
-        .populate('bookings')
-        .populate('savedListing')
+        .populate('orders')
 
         res.json(user)
     }catch (err){
@@ -124,17 +120,8 @@ router.get('/:id', async(req, res, next) => {
 //update user
   router.put("/:id", async (req, res) => {
     try {
-        const {image} = req.body
-        const bbOptions = {
-            apiKey: IMGBB_API_KEY,
-            base64string: image,
-        }
-       
-        const imageResponse = await imgbbUploader(bbOptions);
-        console.log(imageResponse.url)
         const profileContent = {
-            ...req.body,
-            image: imageResponse.url
+            ...req.body
         }
         res.json(
           await User.findByIdAndUpdate(req.params.id,profileContent, { new: true })

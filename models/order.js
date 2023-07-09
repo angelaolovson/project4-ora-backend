@@ -1,47 +1,15 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    guest: {
+    customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         index: true,
     },
-    listing: {
+    product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Listing',
+        ref: 'Product',
         index: true,
-    },
-    host: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    startDate: {
-        type: Date,
-        required: true,
-        validate: {
-            validator: function(value){
-                return value < this.endDate;
-            },
-            message: 'Start date must be before the end date',
-        }
-    },
-    endDate: {
-        type: Date,
-        required: true,
-        validate: {
-            validator: function(value){
-                return value > this.startDate;
-            },
-            message: 'End date must be after the start date',
-        }
-    },
-    address:{
-        type: String,
-        default:"",
-    },
-    image: {
-        type: String,
-        default:"",
     },
     city:{
         type: String,
@@ -51,7 +19,7 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    createdAt: {
+    placedAt: {
         type: Date,
         default: Date.now,
     }

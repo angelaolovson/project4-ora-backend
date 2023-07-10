@@ -47,9 +47,9 @@ router.post("/", async (req, res) => {
         console.log(cart)
         // Create a new cart with the provided user and items
         const newOrder = await Order.create({
-            user: user,
-            items: items,
-    });
+            cart: cart
+        });
+        // empty the cart?
 
     // Return the newly created cart in the response
     res.status(200).json({cart: newOrder});

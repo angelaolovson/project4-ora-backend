@@ -64,19 +64,24 @@ router.get("/:id", async (req, res) => {
 
   
 // Cart UPDATE ROUTE
-router.put("/:id", async (req, res) => {
-  try {
-    const updateCart = {
-        ...req.body,
-    };
-    console.log(updateCart)
-    const updatedCart = await Cart.findByIdAndUpdate(req.params.id, updateCart, { new: true })
-    res.status(200).json(updatedCart);
-    console.log(updatedCart)
-  } catch (error) {
-    res.status(400).json(error);
-    console.log(error)
-  }
+router.patch("/:id", async (req, res) => {
+    console.log("hellooooo")
+    console.log(req.body)
+    console.log(req.params.id)
+    
+
+//   try {
+//     const updateCart = {
+//         ...req.body,
+//     };
+//     console.log(updateCart)
+//     const updatedCart = await Cart.findByIdAndUpdate(req.params.id, updateCart, { new: true })
+//     res.status(200).json(updatedCart);
+//     console.log(updatedCart)
+//   } catch (error) {
+//     res.status(400).json(error);
+//     console.log(error)
+//   }
 });
 
   

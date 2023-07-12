@@ -54,7 +54,8 @@ router.post('/login', async(req, res, next) => {
             );
             req.session.currentUser = {
                 id: user._id,
-                username: user.email
+                username: user.email,
+                cart: user.cart
             };
             
            res.json({token, currentUser: req.session.currentUser})
@@ -77,7 +78,7 @@ router.get('/signup', (req, res) => {
 router.post('/signup', async(req, res, next) => {
     try {
         //creat user and rounds of salt
-        const newUser = {
+        const userData = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
@@ -87,21 +88,28 @@ router.post('/signup', async(req, res, next) => {
         //create hash on user password depends on SALT number
         const rounds = SALT;
         const salt = await bcrypt.genSalt(parseInt(rounds));
-        const hash = await bcrypt.hash(newUser.password, salt);
+        const hash = await bcrypt.hash(userData.password, salt);
 
-        newUser.password = hash;
+        userData.password = hash;
         
         //if user not already exist, create user
-        const existUser = await User.findOne({email: newUser.email});
+        const existUser = await User.findOne({email: userData.email});
         if(existUser){
              res.status(400).json({error: 'Email already exists'})
         } else {
-            const user = await User.create(newUser);
+            const newUser = await User.create(userData);
+            console.log(newUser)
             const newCart = {
-                
+                user: newUser._id
             }
-            const cart = Cart.create
-            res.status(200).json({ message: 'User created successfully' });
+            console.log(newCart)
+            const cart = await Cart.create(newCart)
+            console.log(cart)
+            newUser.cart.push(cart._id)
+            await newUser.save()
+            console.log(newUser);
+            // console.log(cart.populate("user"))
+            res.status(200).json({ message: 'User created successfully', user:newUser });
         }
     } catch(err) {
         console.log(err);

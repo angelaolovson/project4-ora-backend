@@ -33,8 +33,19 @@ const userSchema = new mongoose.Schema({
     orders:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Order',
-    }]
+    }],
+    cart:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart',
+    }],
 });
+
+// pre-hooks to populate the product
+userSchema.pre(["findOne","find"],function(next){
+    this.populate("cart");
+    next();
+})
+
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

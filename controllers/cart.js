@@ -40,27 +40,27 @@ router.get("/:id", async (req, res) => {
 });
 
 
-// CART CREATE ROUTE
-router.post("/", async (req, res) => {
-    console.log(req.body)
-    try {
-        // const { userId, items } = req.body;
-        const user = req.body.user
-        const items = req.body.items
-        console.log(items)
-        // Create a new cart with the provided user and items
-        const newCart = await Cart.create({
-            user: user,
-            items: items,
-        });
+// // CART CREATE ROUTE
+// router.post("/", async (req, res) => {
+//     console.log(req.body)
+//     try {
+//         // const { userId, items } = req.body;
+//         const user = req.body.user
+//         const items = req.body.items
+//         console.log(items)
+//         // Create a new cart with the provided user and items
+//         const newCart = await Cart.create({
+//             user: user,
+//             items: items,
+//         });
 
-    // Return the newly created cart in the response
-    res.status(200).json({cart: newCart});
-  } catch (error) {
-    console.log(error)
-    res.status(400).json(error);
-  }
-});
+//     // Return the newly created cart in the response
+//     res.status(200).json({cart: newCart});
+//   } catch (error) {
+//     console.log(error)
+//     res.status(400).json(error);
+//   }
+// });
 
   
 // Cart UPDATE ROUTE

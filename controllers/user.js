@@ -8,6 +8,7 @@ const {SALT,SECRET} = process.env;
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const jwt = require('jsonwebtoken');
+const Cart = require('../models/cart');
 
 
 let failedLogin;
@@ -95,7 +96,11 @@ router.post('/signup', async(req, res, next) => {
         if(existUser){
              res.status(400).json({error: 'Email already exists'})
         } else {
-            await User.create(newUser);
+            const user = await User.create(newUser);
+            const newCart = {
+                
+            }
+            const cart = Cart.create
             res.status(200).json({ message: 'User created successfully' });
         }
     } catch(err) {

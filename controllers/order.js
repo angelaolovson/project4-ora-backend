@@ -49,7 +49,16 @@ router.post("/", async (req, res) => {
         const newOrder = await Order.create({
             cart: cart
         });
-        // empty the cart?
+    
+      // Update the inventoryCount of products and empty the cart
+      const productIds = cart.items.map((item) => item.product)
+      
+      await Product.updateMany(
+        { _id: { $in: productIds } },
+        { $inc: { inventoryCount: -1 } }
+      );
+
+      await Cart.findByIdAndUpdate(cart._id, { items: [] });
 
     // Return the newly created cart in the response
     res.status(200).json({cart: newOrder});

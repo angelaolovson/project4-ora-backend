@@ -21,6 +21,9 @@ const productSchema = new mongoose.Schema({
     ingredients: {
         type: String,
     },
+    instruction: {
+        type: String,
+    },
     color: {
         type: String,
     },

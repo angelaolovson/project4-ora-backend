@@ -31,12 +31,19 @@ router.get("/", async (req, res) => {
 
 // GET by id
 router.get("/:id", async (req, res) => {
-  try {
-      const cart = await Cart.findById(req.params.id)
-      res.status(200).json(cart);
-    } catch (error) {
-      res.status(400).json(error);
-    }
+    console.log("*******reach get cart by id********")
+    try {
+        const cart = await Cart.findById(req.params.id)
+            .populate('items.product')
+        console.log(cart)
+        //     .exec(function (err, cart) {
+        //         if (err) return handleError(err);
+        //         console.log('The cart is %s', cart);
+        // });
+        res.status(200).json(cart);
+        } catch (error) {
+        res.status(400).json(error);
+        }
 });
 
 
@@ -63,25 +70,71 @@ router.get("/:id", async (req, res) => {
 // });
 
   
+// // Cart UPDATE ROUTE
+// router.patch("/:id", async (req, res) => {
+//     console.log("hellooooo")
+//     console.log(req.body)
+//     console.log(req.params.id)
+    
+//     try {
+//         const updateCart = {
+//             $push: {
+//                 items: req.body
+//             }
+//         };
+//         console.log(updateCart)
+//         const updatedCart = await Cart.findByIdAndUpdate(req.params.id, updateCart, { new: true })
+//         res.status(200).json(updatedCart);
+//         console.log(updatedCart)
+//     } catch (error) {
+//         res.status(400).json(error);
+//         console.log(error)
+//     }
+// });
+
 // Cart UPDATE ROUTE
 router.patch("/:id", async (req, res) => {
     console.log("hellooooo")
     console.log(req.body)
     console.log(req.params.id)
     
+    try {
+        // Find the cart
+        const cart = await Cart.findById(req.params.id);
+        // console.log(cart.items[2].product.toString() === req.body.product)
+        console.log(req.body.product)
 
-//   try {
-//     const updateCart = {
-//         ...req.body,
-//     };
-//     console.log(updateCart)
-//     const updatedCart = await Cart.findByIdAndUpdate(req.params.id, updateCart, { new: true })
-//     res.status(200).json(updatedCart);
-//     console.log(updatedCart)
-//   } catch (error) {
-//     res.status(400).json(error);
-//     console.log(error)
-//   }
+        // Check if the product is already in the items array
+        const item = cart.items.find(p => p.product.toString() == req.body.product);
+
+        // let item;
+        // for (let i = 0; i < cart.items.length; i++) {
+        //     let p = cart.items[i].product.toString();
+        //     console.log(typeof(p))
+        //     console.log(typeof(req.body.product))
+        //     if ( p == req.body.product) {
+        //         item = cart.items[i];
+        //         break;
+        //     }
+        // }
+
+        if (item) {
+            // If the product is already in the items array, increase the quantity
+            item.quantity += req.body.quantity;
+        } else {
+            // If the product is not in the items array, add it
+            cart.items.push(req.body);
+        }
+
+        // Save the cart
+        const updatedCart = await cart.save();
+
+        res.status(200).json(updatedCart);
+        console.log(updatedCart)
+    } catch (error) {
+        res.status(400).json(error);
+        console.log(error)
+    }
 });
 
   

@@ -5,18 +5,34 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-      },
-    cart: {
+    },
+    cart:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cart',
-        index: true,
-    },
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
-    }
-})
-
+    },
+    receiver: {
+        firstName: {
+            type: String,
+            required: true,
+        },
+        lastName: {
+            type: String,
+            required: true,
+        },
+        phoneNumber: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+        },
+    },
+});
 
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;

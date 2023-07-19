@@ -145,21 +145,72 @@ router.get('/:id', async(req, res, next) => {
     }
 })
 
+// //update user
+// router.put("/:id", async (req, res) => {
+// try {
+//     const profileContent = {
+//         ...req.body
+//     }
+//     res.json(
+//         await User.findByIdAndUpdate(req.params.id,profileContent, { new: true })
+//     );
+//     } catch (error) {
+//     //send error
+//     console.log(error)
+//     res.status(400).json(error);
+//     }
+// });
+
+
 //update user
-router.put("/:id", async (req, res) => {
-try {
-    const profileContent = {
-        ...req.body
+router.put('/:userId', async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const {
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+        address,
+        phoneNumber,
+      } = req.body;
+  
+      // Find the user by ID
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Update the user properties
+      user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
+      user.email = email || user.email;
+      user.role = role || user.role;
+      user.address = address || user.address;
+      user.phoneNumber = phoneNumber || user.phoneNumber;
+  
+      // Update the user's password if provided
+      if (password) {
+        const rounds = SALT;
+        const salt = await bcrypt.genSalt(parseInt(rounds));
+        const hash = await bcrypt.hash(password, salt);
+        user.password = hash;
+      }
+  
+      // Save the updated user
+      const updatedUser = await user.save();
+  
+      res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    } catch (err) {
+      console.log(err);
+      next();
     }
-    res.json(
-        await User.findByIdAndUpdate(req.params.id,profileContent, { new: true })
-    );
-    } catch (error) {
-    //send error
-    console.log(error)
-    res.status(400).json(error);
-    }
-});
+  });
+  
+
+
 
 // USER DELETE ROUTE
 router.delete("/:id", async (req, res) => {

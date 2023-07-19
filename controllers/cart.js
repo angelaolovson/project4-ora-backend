@@ -34,7 +34,7 @@ router.get("/:id", async (req, res) => {
     console.log("*******reach get cart by id********")
     try {
         const cart = await Cart.findById(req.params.id)
-            .populate('items.product')
+            // .populate('items.product')
         console.log(cart)
         //     .exec(function (err, cart) {
         //         if (err) return handleError(err);
@@ -45,29 +45,6 @@ router.get("/:id", async (req, res) => {
         res.status(400).json(error);
         }
 });
-
-
-// // CART CREATE ROUTE
-// router.post("/", async (req, res) => {
-//     console.log(req.body)
-//     try {
-//         // const { userId, items } = req.body;
-//         const user = req.body.user
-//         const items = req.body.items
-//         console.log(items)
-//         // Create a new cart with the provided user and items
-//         const newCart = await Cart.create({
-//             user: user,
-//             items: items,
-//         });
-
-//     // Return the newly created cart in the response
-//     res.status(200).json({cart: newCart});
-//   } catch (error) {
-//     console.log(error)
-//     res.status(400).json(error);
-//   }
-// });
 
   
 // // Cart UPDATE ROUTE
@@ -159,49 +136,5 @@ router.patch("/:cartId/items/:productId", async (req, res) => {
         console.log(error)
     }
 });
-
-
-
-  
-// // PRODUCT DELETE ROUTE
-// router.delete("/:id", async (req, res) => {
-//   try {
-//     res.json(await Cart.findByIdAndRemove(req.params.id));
-//   } catch (error) {
-//     //send error
-//     res.status(400).json(error);
-//   }
-// });
-
-// module.exports = router;
-
-
-
-// // DELETE ITEM FROM CART ROUTE
-// router.delete("/:id/items/:itemId", async (req, res) => {
-//     console.log(req.params.itemId)
-//     try {
-//         // find the cart by id
-//         const cart = await Cart.findById(req.params.id);
-
-//         // find the item index in the cart
-//         const itemIndex = cart.items.findIndex(item => item.id == req.params.itemId);
-
-//         if (itemIndex >= 0) {
-//             // remove the item from the cart
-//             cart.items.splice(itemIndex, 1);
-
-//             // save the cart
-//             const updatedCart = await cart.save();
-
-//             // return the updated cart
-//             res.status(200).json(updatedCart);
-//         } else {
-//             res.status(404).json({ message: "Item not found in the cart" });
-//         }
-//     } catch (error) {
-//         res.status(400).json(error);
-//     }
-// });
 
 module.exports = router;

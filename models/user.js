@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     role: { 
         type: String, 
         default: 'customer' 
-    }, // 'admin'
+    },
     address: {
         type: String,
         default: ""
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     cart:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cart',
-    }],
+    }], //should it be an array??
 });
 
 // pre-hooks to populate the product

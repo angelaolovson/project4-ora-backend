@@ -41,24 +41,30 @@ router.get("/:id", async (req, res) => {
 // ORDER CREATE ROUTE
 router.post("/", async (req, res) => {
   console.log(req.body)
-    try {
-        // const { userId, items } = req.body;
-        const cart = req.body.cart
-        console.log(cart)
-        // Create a new cart with the provided user and items
-        const newOrder = await Order.create({
-            cart: cart
-        });
-    
-      // Update the inventoryCount of products and empty the cart
-      const productIds = cart.items.map((item) => item.product)
-      
-      await Product.updateMany(
-        { _id: { $in: productIds } },
-        { $inc: { inventoryCount: -1 } }
-      );
+  try {
+    const { cart, receiver } = req.body;
 
-      await Cart.findByIdAndUpdate(cart._id, { items: [] });
+    // Create a new order with the provided cart and receiver information
+    const newOrder = await Order.create({
+      user: cart.user,
+      cart: [cart._id], // Wrap the cart ID in an array since it's a reference to an array of carts
+      receiver: {
+        firstName: receiver.firstName,
+        lastName: receiver.lastName,
+        phoneNumber: receiver.phoneNumber,
+        email: receiver.email,
+      },
+  });
+
+      // // Update the inventoryCount of products and empty the cart
+      // const productIds = cart.items.map((item) => item.product)
+
+      // await Product.updateMany(
+      //   { _id: { $in: productIds } },
+      //   { $inc: { inventoryCount: -1 } }
+      // );
+
+      // await Cart.findByIdAndUpdate(cart._id, { items: [] });
 
     // Return the newly created cart in the response
     res.status(200).json({cart: newOrder});
@@ -68,10 +74,6 @@ router.post("/", async (req, res) => {
   }
 });
   
-// ORDER UPDATE ROUTE
-router.put("/:id", async (req, res) => {
-
-});
 
 // ORDER DELETE ROUTE
 router.delete("/:id", async (req, res) => {

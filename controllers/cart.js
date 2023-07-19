@@ -46,28 +46,6 @@ router.get("/:id", async (req, res) => {
         }
 });
 
-  
-// // Cart UPDATE ROUTE
-// router.patch("/:id", async (req, res) => {
-//     console.log("hellooooo")
-//     console.log(req.body)
-//     console.log(req.params.id)
-    
-//     try {
-//         const updateCart = {
-//             $push: {
-//                 items: req.body
-//             }
-//         };
-//         console.log(updateCart)
-//         const updatedCart = await Cart.findByIdAndUpdate(req.params.id, updateCart, { new: true })
-//         res.status(200).json(updatedCart);
-//         console.log(updatedCart)
-//     } catch (error) {
-//         res.status(400).json(error);
-//         console.log(error)
-//     }
-// });
 
 // Cart UPDATE ROUTE
 router.patch("/:id", async (req, res) => {
@@ -84,17 +62,6 @@ router.patch("/:id", async (req, res) => {
         // Check if the product is already in the items array
         const item = cart.items.find(p => p.product.toString() == req.body.product);
 
-        // let item;
-        // for (let i = 0; i < cart.items.length; i++) {
-        //     let p = cart.items[i].product.toString();
-        //     console.log(typeof(p))
-        //     console.log(typeof(req.body.product))
-        //     if ( p == req.body.product) {
-        //         item = cart.items[i];
-        //         break;
-        //     }
-        // }
-
         if (item) {
             // If the product is already in the items array, increase the quantity
             item.quantity += req.body.quantity;
@@ -106,8 +73,12 @@ router.patch("/:id", async (req, res) => {
         // Save the cart
         const updatedCart = await cart.save();
 
-        res.status(200).json(updatedCart);
-        console.log(updatedCart)
+        // fetch it again to get the data display right
+        const realCart = await Cart.findById(updatedCart._id)
+
+        // send data
+        res.status(200).json(realCart);
+        console.log(realCart)
     } catch (error) {
         res.status(400).json(error);
         console.log(error)

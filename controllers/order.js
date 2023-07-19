@@ -45,13 +45,11 @@ router.post("/", async (req, res) => {
   try {
     const { user, cart, receiver } = req.body;
 
-    // cart findone, and clone it to save it as a new array, ex numbers = [1, 2, 3]; numbersCopy = [...numbers];
-
+    // cart findbyid, and clone it to save it as a new array(ex numbers = [1, 2, 3]; numbersCopy = [...numbers]) to avoid losing data after the order placed and cart gets empty;
     const cartInfo = await Cart.findById(cart).populate("items.product");
     console.log(cartInfo)
     const cartInfoCopy = [...cartInfo.items]
     console.log(cartInfoCopy, "*******************   the copy of shopping cart   *******************")
-
 
     // Create a new order with the provided cart and receiver information
     const newOrder = await Order.create({
@@ -65,19 +63,20 @@ router.post("/", async (req, res) => {
       },
     });
 
+    // Update the product's orders array with the newly created order ID
+    for (const item of cartInfoCopy) {
+      const product = await Product.findById(item.product);
+      product.orders.push(newOrder._id);
+      // Subtract the quantity from inventoryCount
+      product.inventoryCount -= item.quantity; 
+      await product.save();
+    }
+
+    // Empty the cart
+    await Cart.findByIdAndUpdate(cart, { items: [] });
+
     // Update the user's orders array with the newly created order ID
     await User.findByIdAndUpdate(user, { $push: { orders: newOrder._id } });
-
-
-    // // Update the inventoryCount of products and empty the cart
-    // const productIds = cart.items.map((item) => item.product)
-
-    // await Product.updateMany(
-    //   { _id: { $in: productIds } },
-    //   { $inc: { inventoryCount: -1 } }
-    // );
-
-    // await Cart.findByIdAndUpdate(cart._id, { items: [] });
 
     // Return the newly created cart in the response
     res.status(200).json({cart: newOrder});

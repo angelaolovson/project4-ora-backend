@@ -5,6 +5,7 @@ const express = require("express");
 const Order = require("../models/order");
 const Product = require("../models/product");
 const User = require("../models/user");
+const Cart = require("../models/cart")
 ///////////////////////////////
 
 /////////////////////////////////////////
@@ -40,31 +41,43 @@ router.get("/:id", async (req, res) => {
   
 // ORDER CREATE ROUTE
 router.post("/", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body, "req.body")
   try {
-    const { cart, receiver } = req.body;
+    const { user, cart, receiver } = req.body;
+
+    // cart findone, and clone it to save it as a new array, ex numbers = [1, 2, 3]; numbersCopy = [...numbers];
+
+    const cartInfo = await Cart.findById(cart).populate("items.product");
+    console.log(cartInfo)
+    const cartInfoCopy = [...cartInfo.items]
+    console.log(cartInfoCopy, "*******************   the copy of shopping cart   *******************")
+
 
     // Create a new order with the provided cart and receiver information
     const newOrder = await Order.create({
-      user: cart.user,
-      cart: [cart._id], // Wrap the cart ID in an array since it's a reference to an array of carts
+      user: user,
+      items: cartInfoCopy, // has product id + qty
       receiver: {
         firstName: receiver.firstName,
         lastName: receiver.lastName,
         phoneNumber: receiver.phoneNumber,
         email: receiver.email,
       },
-  });
+    });
 
-      // // Update the inventoryCount of products and empty the cart
-      // const productIds = cart.items.map((item) => item.product)
+    // Update the user's orders array with the newly created order ID
+    await User.findByIdAndUpdate(user, { $push: { orders: newOrder._id } });
 
-      // await Product.updateMany(
-      //   { _id: { $in: productIds } },
-      //   { $inc: { inventoryCount: -1 } }
-      // );
 
-      // await Cart.findByIdAndUpdate(cart._id, { items: [] });
+    // // Update the inventoryCount of products and empty the cart
+    // const productIds = cart.items.map((item) => item.product)
+
+    // await Product.updateMany(
+    //   { _id: { $in: productIds } },
+    //   { $inc: { inventoryCount: -1 } }
+    // );
+
+    // await Cart.findByIdAndUpdate(cart._id, { items: [] });
 
     // Return the newly created cart in the response
     res.status(200).json({cart: newOrder});

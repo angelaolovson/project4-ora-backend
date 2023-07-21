@@ -41,5 +41,11 @@ const orderSchema = new mongoose.Schema({
     },
 });
 
+// pre-hooks to populate the product
+orderSchema.pre(["findOne","find"],function(next){
+    this.populate("items.product");
+    next();
+})
+
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;

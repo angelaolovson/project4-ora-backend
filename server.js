@@ -30,7 +30,15 @@ app.use(
 
 app.use(bodyParser.json({ limit: '200mb' }));
 app.use(express.urlencoded({ limit: '200mb', extended: false }));
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: ['https://capstone-ora-frontend.onrender.com', 'http://localhost:3000'], // Replace with your frontend URLs
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204
+  }));
+  
+
 //router
 const userRouter = require("./controllers/user");
 const orderRouter = require("./controllers/order");

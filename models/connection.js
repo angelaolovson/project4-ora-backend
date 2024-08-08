@@ -8,8 +8,7 @@ const { MONGODB_URL } = process.env;
 ////////////////////////////////
 // Establish Connection
 mongoose.connect(MONGODB_URL, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
+  // other options if needed
 });
 // Connection Events
 mongoose.connection
@@ -17,4 +16,4 @@ mongoose.connection
   .on("close", () => console.log("You are disconnected from mongoose"))
   .on("error", (error) => console.log(error));
 
-module.exports = mongoose;  
+module.exports = mongoose;
